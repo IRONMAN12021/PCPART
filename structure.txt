@@ -1,0 +1,40 @@
+pc_configurator_app/
+│
+├── android/                   
+├── ios/                       
+├── lib/                       
+│   ├── api/                   
+│   ├── components/            
+│   ├── models/                
+│   ├── providers/             
+│   ├── screens/               
+│   │   ├── auth/              
+│   │   ├── build/             
+│   │   ├── details/           
+│   │   └── profile/           
+│   ├── services/              
+│   ├── utils/                 
+│   ├── widgets/               
+│   ├── main.dart              
+│   └── routes.dart            
+│
+├── test/                      
+├── web/                       
+├── README.md                  
+├── pubspec.yaml               
+└── scrape_backend/            
+    ├── app.py                 
+    ├── requirements.txt       
+    ├── scraper/               
+    │   ├── __init__.py        
+    │   ├── pcpartpicker.py    
+    │   ├── lttlabs.py         
+    │   ├── zttlabs.py         
+    │   ├── amazon.py          
+    │   ├── passmark.py        
+    │   ├── tomshardware.py    
+    │   ├── techspot.py        
+    │   ├── techpowerup.py     
+    │   ├── utils.py           
+    ├── static/                
+    └── templates/             
