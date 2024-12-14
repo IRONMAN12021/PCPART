@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class UseCaseScreen extends StatelessWidget {
   final Function(String) onNext;
 
-  UseCaseScreen({required this.onNext});
+  const UseCaseScreen({super.key, required this.onNext});
 
   @override
   Widget build(BuildContext context) {

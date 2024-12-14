@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print, deprecated_member_use
+
 import 'package:flutter/material.dart';
 //import 'package:myapp/services/supabase_service.dart';
 import 'package:supabase/supabase.dart';
@@ -13,7 +15,7 @@ void main() {
 class MyApp extends StatelessWidget {
   final SupabaseService supabaseService;
 
-  MyApp({required this.supabaseService});
+  const MyApp({super.key, required this.supabaseService});
 
   @override
   Widget build(BuildContext context) {
@@ -27,7 +29,7 @@ class MyApp extends StatelessWidget {
 class HomeScreen extends StatelessWidget {
   final SupabaseService supabaseService;
 
-  HomeScreen({required this.supabaseService});
+  const HomeScreen({super.key, required this.supabaseService});
 
   @override
   Widget build(BuildContext context) {

@@ -5,7 +5,7 @@ class BuildComparisonScreen extends StatelessWidget {
   final Map<String, dynamic> manualBuildData;
   final List<Map<String, dynamic>> preBuiltPCs;
 
-  BuildComparisonScreen({
+  const BuildComparisonScreen({super.key, 
     required this.autoBuildData,
     required this.manualBuildData,
     required this.preBuiltPCs,
@@ -35,6 +35,7 @@ class BuildComparisonScreen extends StatelessWidget {
                 'Pre-Built PCs',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
+              // ignore: unnecessary_to_list_in_spreads
               ...preBuiltPCs.map((pc) => _buildPreBuiltSection(pc)).toList(),
             ],
           ),
