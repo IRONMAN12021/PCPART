@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class TechPowerUpScraper {
+class TechPowerUp {
   static Future<List<Map<String, dynamic>>> scrape() async {
-    const String url = 'https://www.techpowerup.com/benchmarks';
+    const String url = 'https://www.techpowerup.com/review';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

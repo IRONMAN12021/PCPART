@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class UserBenchmarkScraper {
+class UserBenchmark {
   static Future<List<Map<String, dynamic>>> scrape() async {
-    const String url = 'https://www.userbenchmark.com/';
+    const String url = 'https://www.userbenchmark.com/benchmarks';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -11,7 +11,7 @@ class UserBenchmarkScraper {
         return data.map((item) => {
           'component': item['component'],
           'score': item['score'],
-          'rank': item['rank'],
+          'details': item['details'],
         }).toList();
       } else {
         throw Exception('Failed to fetch benchmarks from UserBenchmark');

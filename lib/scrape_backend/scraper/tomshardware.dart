@@ -2,7 +2,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class TomsHardwareScraper {
+class TomsHardware {
   static Future<List<Map<String, dynamic>>> scrape() async {
     const String url = 'https://www.tomshardware.com/reviews';
     try {
@@ -15,12 +15,11 @@ class TomsHardwareScraper {
           'comments': item['comments'],
         }).toList();
       } else {
-        throw Exception('Failed to fetch benchmarks from Tom's Hardware');
+        throw Exception('Failed to fetch benchmarks from TomsHardware');
       }
     } catch (e) {
-      print('Error scraping Tom's Hardware: $e');
+      print('Error scraping TomsHardware: $e');
       return [];
     }
   }
-}
 }

@@ -1,5 +1,7 @@
 import 'package:myapp/models/pc_part.dart';
 import 'package:flutter/material.dart';
+//import 'package:myapp/screens/build/auto_build/auto_bild_summary_screen.dart';
+import 'package:myapp/routes.dart';
 
 class BuildConfig {
   final String id;
@@ -17,11 +19,12 @@ class BuildConfig {
   // Convert JSON to BuildConfig object
   factory BuildConfig.fromJson(Map<String, dynamic> json) {
     return BuildConfig(
-      id: json['_id'],
-      userId: json['userId'],
-      parts:
-          (json['parts'] as List).map((part) => PCPart.fromJson(part)).toList(),
-      totalPrice: json['totalPrice'],
+      id: json['_id'] as String,
+      userId: json['userId'] as String,
+      parts: (json['parts'] as List)
+          .map((part) => PCPart.fromJson(part as Map<String, dynamic>))
+          .toList(),
+      totalPrice: (json['totalPrice'] as num).toDouble(),
     );
   }
 
@@ -37,10 +40,9 @@ class BuildConfig {
 }
 
 void navigateToBuildSummary(BuildContext context, BuildConfig yourBuildConfig) {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => BuildSummaryScreen(buildConfig: yourBuildConfig),
-    ),
+  Navigator.pushNamed(
+    context, 
+    Routes.autoBuildSummary,
+    arguments: yourBuildConfig,
   );
 }

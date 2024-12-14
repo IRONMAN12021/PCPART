@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/services/amazon_service.dart';
+import 'package:myapp/screens/parts/part_details_screen.dart';
 import 'package:myapp/services/scraper_service.dart';
-import 'package:myapp/screens/manual_build_pc.dart';
-import 'package:myapp/screens/auto_build_pc.dart';
-import 'package:myapp/screens/part_details_screen.dart';
+import 'package:myapp/services/amazon_service.dart';
+import 'package:myapp/screens/build/auto_build/auto_build_screen.dart';
+//import 'package:myapp/screens/build/auto_build/questions/budget.dart';
+//import 'package:myapp/screens/build/auto_build/questions/use_case_screen.dart';
+//import 'package:myapp/screens/build/auto_build/questions/sub_question_screen.dart';
+//import 'package:myapp/screens/build/auto_build/auto_bild_summary_screen.dart';//
+//import 'package:myapp/screens/build/build_comparison_screen.dart';
+import 'package:myapp/screens/build/manual_build/manual_build_screen.dart';
+//import 'package:myapp/screens/build/manual_build/manual_build_summary_screen.dart';
+import 'package:myapp/widgets/part_card.dart';
+import 'package:myapp/widgets/loading_indicator.dart';
+//import 'package:myapp/widgets/error_display.dart';
 
 class PartsListScreen extends StatefulWidget {
+  const PartsListScreen({super.key});
+
   @override
+  // ignore: library_private_types_in_public_api
   _PartsListScreenState createState() => _PartsListScreenState();
 }
 
@@ -48,7 +60,7 @@ class _PartsListScreenState extends State<PartsListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => ManualBuildPC()),
+                MaterialPageRoute(builder: (context) => const ManualBuildScreen()),
               );
             },
           ),
@@ -57,21 +69,22 @@ class _PartsListScreenState extends State<PartsListScreen> {
             onPressed: () {
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => AutoBuildPC()),
+                MaterialPageRoute(builder: (context) => const AutoBuildScreen()),
               );
             },
           ),
         ],
       ),
       body: isLoading
-          ? Center(child: CircularProgressIndicator())
+          ? const LoadingIndicator()
           : ListView.builder(
               itemCount: parts.length,
               itemBuilder: (context, index) {
                 final part = parts[index];
-                return ListTile(
-                  title: Text(part['name']),
-                  subtitle: Text('Price: \$${part['price']}'),
+                return PartCard(
+                  name: part['name'],
+                  price: part['price'],
+                  type: part['type'],
                   onTap: () {
                     Navigator.push(
                       context,

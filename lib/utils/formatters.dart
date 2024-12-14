@@ -1,5 +1,5 @@
 import 'package:intl/intl.dart';
-import 'package:intl/locale.dart';
+//import 'package:intl/locale.dart';
 
 class Formatters {
   static String formatPrice(double price, {String currencySymbol = '\$'}) {

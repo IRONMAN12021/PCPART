@@ -1,35 +1,35 @@
 // File: flow_control.dart
-import 'lttlabs.dart';
-import 'zttlabs.dart';
+import 'ltt_labs.dart';
+import 'ztt_labs.dart';
 import 'passmark.dart';
-import 'Threedmark.dart';
-import 'pugetbench.dart';
+import 'three_d_mark.dart';
+import 'puget_bench.dart';
 import 'cinebench.dart';
 import 'anandtech.dart';
 import 'tomshardware.dart';
 import 'techpowerup.dart';
 import 'techspot.dart';
-import 'Userbenchmark.dart';
-import 'hardwarecanuncks.dart';
+import 'userbenchmark.dart';
+import 'hardware_canucks.dart';
 import 'pcpartpicker.dart';
 
 
 class FlowControl {
   static Future<Map<String, dynamic>> fetchAggregatedData() async {
     try {
-      final lttData = await LTTLabsScraper.scrape();
-      final zttData = await ZTTLabsScraper.scrape();
-      final passMarkData = await PassMarkScraper.scrape();
-      final threeDMarkData = await ThreeDMarkScraper.scrape();
-      final pugetBenchData = await PugetBenchScraper.scrape();
-      final cinebenchData = await CinebenchScraper.scrape();
-      final anandTechData = await AnandTechScraper.scrape();
-      final tomsHardwareData = await TomsHardwareScraper.scrape();
-      final techpowerup = await TechPowerUp.scrape();
-      final techspot = await TechSpot.scrape();
-      final hardwarecanuncks = await HardwareCanuncks.scrape();
-      final userbenchmark = await UserBenchmark.scrape();
-      final pcpartpicker = await PCPartPicker.scrape();
+      final lttData = await LTTLabs.scrape();
+      final zttData = await ZTTLabs.scrape();
+      final passMarkData = await PassMark.scrape();
+      final threeDMarkData = await ThreeDMark.scrape();
+      final pugetBenchData = await PugetBench.scrape();
+      final cinebenchData = await Cinebench.scrape();
+      final anandTechData = await AnandTech.scrape();
+      final tomsHardwareData = await TomsHardware.scrape();
+      final techPowerUpData = await TechPowerUp.scrape();
+      final techSpotData = await TechSpot.scrape();
+      final hardwareCanucksData = await HardwareCanucks.scrape();
+      final userBenchmarkData = await UserBenchmark.scrape();
+      final pcPartPickerData = await PCPartPicker.scrape();
 
       return {
         'LTTLabs': lttData,
@@ -40,11 +40,11 @@ class FlowControl {
         'Cinebench': cinebenchData,
         'AnandTech': anandTechData,
         'TomsHardware': tomsHardwareData,
-        'TechPowerUp' : techpowerup,
-        'TechSpot' : techspot
-        'HardwareCanuncks' : hardwarecanucks,
-        'UserBenchmark' : userbenchmark,
-        'PCPartPicker' : pcpartpicker
+        'TechPowerUp': techPowerUpData,
+        'TechSpot': techSpotData,
+        'HardwareCanucks': hardwareCanucksData,
+        'UserBenchmark': userBenchmarkData,
+        'PCPartPicker': pcPartPickerData,
       };
     } catch (e) {
       print('Error aggregating benchmark data: $e');

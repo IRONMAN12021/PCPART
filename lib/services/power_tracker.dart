@@ -1,6 +1,8 @@
 // ignore_for_file: avoid_print
 
-class PowerUsageTracker {
+import 'package:myapp/models/pc_part.dart';
+
+class PowerTracker {
   // List to hold TDP values of selected components
   List<double> selectedPartsTdp = [];
 
@@ -53,5 +55,16 @@ class PowerUsageTracker {
         print("Part TDP: $partTdp W");
       }
     }
+  }
+
+  // Add the missing method that ApiService calls
+  Future<double> calculateTotalPower(List<PCPart> selectedParts) async {
+    double totalPower = 0;
+    for (var part in selectedParts) {
+      if (part.specifications['tdp'] != null) {
+        totalPower += part.specifications['tdp'] as double;
+      }
+    }
+    return totalPower;
   }
 }

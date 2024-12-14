@@ -1,22 +1,23 @@
 import 'package:flutter/material.dart';
-
+import '../services/supabase_service.dart';
+import '../models/build_config.dart';
 // Importing all the screens
-import '../screens/start_screen.dart';
-import '../screens/login_screen.dart';
-import '../screens/register_screen.dart';
-import '../screens/splash_screen.dart';
-import '../screens/home_screen.dart';
-import '../screens/profile_screen.dart';
-import '../screens/search_screen.dart';
-import '../screens/build_pc.dart';
-import '../screens/auto_build_screen.dart';
-import '../screens/manual_build_screen.dart';
-import '../screens/build_summary_screen.dart';
-import '../screens/build_comparison_screen.dart';
-import '../screens/settings_screen.dart';
-import '../screens/about_screen.dart';
-import '../screens/feedback_screen.dart';
-import '../screens/error_screen.dart';
+import '../screens/auth/startscreen.dart';
+import '../screens/auth/login_screen.dart';
+import '../screens/auth/register_screen.dart';
+import '../screens/auth/splash_screen.dart';
+import '../screens/home/home_screen.dart';
+import '../screens/home/profile_screen.dart';
+import '../screens/home/search_screen.dart';
+import '../screens/build/build_pc.dart';
+import '../screens/build/auto_build/auto_build_screen.dart';
+import '../screens/build/manual_build/manual_build_screen.dart';
+import '../screens/build/manual_build/manual_build_summary_screen.dart';
+import '../screens/build/build_comparison_screen.dart';
+import '../screens/settings/settings_screen.dart';
+import '../screens/settings/about_screen.dart';
+import '../screens/settings/feedback_screen.dart';
+import '../screens/error/error_screen.dart';
 
 class NavigationManager {
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -24,17 +25,21 @@ class NavigationManager {
       case '/start':
         return MaterialPageRoute(builder: (_) => const StartScreen());
       case '/login':
-        return MaterialPageRoute(builder: (_) => const LoginScreen());
+        return MaterialPageRoute(builder: (_) => LoginScreen());
       case '/register':
-        return MaterialPageRoute(builder: (_) => const RegisterScreen());
+        return MaterialPageRoute(
+          builder: (_) => RegisterScreen(
+            supabaseService: SupabaseService(),
+          ),
+        );
       case '/splash':
-        return MaterialPageRoute(builder: (_) => const SplashScreen());
+        return MaterialPageRoute(builder: (_) => SplashScreen());
       case '/home':
-        return MaterialPageRoute(builder: (_) => const HomeScreen());
+        return MaterialPageRoute(builder: (_) => HomeScreen());
       case '/profile':
-        return MaterialPageRoute(builder: (_) => const ProfileScreen());
+        return MaterialPageRoute(builder: (_) => ProfileScreen());
       case '/search':
-        return MaterialPageRoute(builder: (_) => const SearchScreen());
+        return MaterialPageRoute(builder: (_) => SearchScreen());
       case '/build_pc':
         return MaterialPageRoute(builder: (_) => const BuildPcScreen());
       case '/auto_build':
@@ -42,7 +47,11 @@ class NavigationManager {
       case '/manual_build':
         return MaterialPageRoute(builder: (_) => const ManualBuildScreen());
       case '/summary':
-        return MaterialPageRoute(builder: (_) => const SummaryScreen());
+        return MaterialPageRoute(
+          builder: (_) => ManualBuildSummaryScreen(
+            buildConfig: settings.arguments as BuildConfig,
+          ),
+        );
       case '/comparison':
         return MaterialPageRoute(
           builder: (_) => BuildComparisonScreen(
@@ -52,11 +61,11 @@ class NavigationManager {
           ),
         );
       case '/settings':
-        return MaterialPageRoute(builder: (_) => const SettingsScreen());
+        return MaterialPageRoute(builder: (_) => SettingsScreen());
       case '/about':
-        return MaterialPageRoute(builder: (_) => const AboutScreen());
+        return MaterialPageRoute(builder: (_) => AboutScreen());
       case '/feedback':
-        return MaterialPageRoute(builder: (_) => const FeedbackScreen());
+        return MaterialPageRoute(builder: (_) => FeedbackScreen());
       default:
         // Redirect to error screen if route is unknown
         return MaterialPageRoute(builder: (_) => const ErrorScreen());

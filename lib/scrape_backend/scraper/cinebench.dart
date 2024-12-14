@@ -2,9 +2,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class CinebenchScraper {
+class Cinebench {
   static Future<List<Map<String, dynamic>>> scrape() async {
-    const String url = 'https://www.maxon.net/cinebench';
+    const String url = 'https://www.maxon.net/en/cinebench';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {

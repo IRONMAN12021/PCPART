@@ -1,3 +1,5 @@
+//import 'package:myapp/models/pc_part.dart';
+
 class CompatibilityChecker {
   // Check CPU and Motherboard compatibility with error message
   Map<String, dynamic> checkCpuMotherboardCompatibility(String cpuSocket, String motherboardSocket) {
@@ -24,13 +26,16 @@ class CompatibilityChecker {
   }
 
   // Check if the motherboard fits in the case
-  Map<String, dynamic> checkMotherboardCaseCompatibility(String motherboardFormFactor, String caseSupportedFormFactor) {
-    if (motherboardFormFactor == caseSupportedFormFactor || caseSupportedFormFactor == 'ATX' || caseSupportedFormFactor == 'Micro-ATX') {
-      return {'isCompatible': true, 'message': 'Motherboard form factor is compatible with the case.'};
+  Map<String, dynamic> checkMotherboardCaseCompatibility(
+    String motherboardFormFactor, 
+    List<String> supportedFormFactors
+  ) {
+    if (supportedFormFactors.contains(motherboardFormFactor)) {
+      return {'isCompatible': true, 'message': 'Motherboard form factor is compatible.'};
     } else {
       return {
         'isCompatible': false,
-        'message': 'Incompatible motherboard form factor. Motherboard: $motherboardFormFactor, Case supports: $caseSupportedFormFactor'
+        'message': 'Incompatible form factor. $motherboardFormFactor is not supported by case.'
       };
     }
   }
@@ -48,25 +53,28 @@ class CompatibilityChecker {
   }
 
   // Check storage compatibility with motherboard
-  Map<String, dynamic> checkStorageCompatibility(String storageType, List<String> motherboardSupportedStorageTypes) {
-    if (motherboardSupportedStorageTypes.contains(storageType)) {
-      return {'isCompatible': true, 'message': 'Storage type is compatible with the motherboard.'};
+  Map<String, dynamic> checkStorageCompatibility(String storageType, List<String> supportedTypes) {
+    if (supportedTypes.contains(storageType)) {
+      return {'isCompatible': true, 'message': 'Storage type is compatible.'};
     } else {
       return {
         'isCompatible': false,
-        'message': 'Incompatible storage type. Storage type: $storageType, Motherboard supports: ${motherboardSupportedStorageTypes.join(', ')}'
+        'message': 'Incompatible storage type. $storageType is not supported by motherboard.'
       };
     }
   }
 
   // Check if the power supply fits in the case
-  Map<String, dynamic> checkPowerSupplyCompatibility(String powerSupplyFormFactor, String caseSupportedFormFactor) {
-    if (powerSupplyFormFactor == caseSupportedFormFactor || caseSupportedFormFactor == 'ATX' || caseSupportedFormFactor == 'SFX') {
-      return {'isCompatible': true, 'message': 'Power supply form factor is compatible with the case.'};
+  Map<String, dynamic> checkPowerSupplyCompatibility(
+    String psuFormFactor, 
+    List<String> supportedFormFactors
+  ) {
+    if (supportedFormFactors.contains(psuFormFactor)) {
+      return {'isCompatible': true, 'message': 'PSU form factor is compatible.'};
     } else {
       return {
         'isCompatible': false,
-        'message': 'Incompatible power supply form factor. Power supply: $powerSupplyFormFactor, Case supports: $caseSupportedFormFactor'
+        'message': 'Incompatible PSU form factor. $psuFormFactor is not supported by case.'
       };
     }
   }
@@ -106,5 +114,49 @@ class CompatibilityChecker {
       }
     }
     return {'isCompatible': true, 'message': 'PSU has the required cables.'};
+  }
+
+  // Add the missing method that ApiService calls
+  Future<Map<String, dynamic>> checkCompatibility(Map<String, String> selectedParts) async {
+    final results = <String, dynamic>{
+      'isCompatible': true,
+      'incompatibilities': <String>[],
+    };
+
+    try {
+      // Check CPU and Motherboard compatibility
+      if (selectedParts.containsKey('cpu') && selectedParts.containsKey('motherboard')) {
+        final cpuResult = checkCpuMotherboardCompatibility(
+          selectedParts['cpu']!,
+          selectedParts['motherboard']!
+        );
+        if (!cpuResult['isCompatible']) {
+          results['isCompatible'] = false;
+          results['incompatibilities'].add(cpuResult['message']);
+        }
+      }
+
+      // Add RAM compatibility check
+      if (selectedParts.containsKey('ram') && selectedParts.containsKey('motherboard')) {
+        final ramResult = checkRamCompatibility(
+          selectedParts['ram']!,
+          selectedParts['motherboard']!
+        );
+        if (!ramResult['isCompatible']) {
+          results['isCompatible'] = false;
+          results['incompatibilities'].add(ramResult['message']);
+        }
+      }
+
+      // Add other compatibility checks as needed...
+
+      return results;
+    } catch (e) {
+      return {
+        'isCompatible': false,
+        'error': e.toString(),
+        'incompatibilities': ['Error checking compatibility']
+      };
+    }
   }
 }

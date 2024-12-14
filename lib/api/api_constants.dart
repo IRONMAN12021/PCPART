@@ -1,4 +1,6 @@
 class ApiConstants {
-  static const String baseUrl = 'https://your-backend-api-url.com/api';
-  static const String apiKey = 'your-api-key-here';
+  static const String supabaseUrl = 'YOUR_SUPABASE_URL';
+  static const String supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+  
+  // Add other API constants as needed
 }

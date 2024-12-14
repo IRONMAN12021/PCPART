@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:myapp/models/build_config.dart';
+import 'package:myapp/models/pc_part.dart';
 
 class GeminiService {
   final String baseUrl;
@@ -35,6 +36,24 @@ class GeminiService {
 
     if (response.statusCode != 201) {
       throw Exception('Failed to create build config');
+    }
+  }
+
+  Future<List<PCPart>> getSuggestedParts(Map<String, dynamic> preferences) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/suggest-parts'),
+      headers: {
+        'Authorization': 'Bearer $apiKey',
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(preferences),
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = jsonDecode(response.body);
+      return data.map((json) => PCPart.fromJson(json)).toList();
+    } else {
+      throw Exception('Failed to get suggested parts');
     }
   }
 }

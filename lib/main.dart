@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myapp/services/supabase_service.dart';
+//import 'package:myapp/services/supabase_service.dart';
 import 'package:supabase/supabase.dart';
 import 'package:myapp/utils/api_constants.dart';
-import 'package:myapp/utils/logger.dart';
+//import 'package:myapp/utils/logger.dart';
 
 void main() {
   final supabaseService = SupabaseService();
@@ -58,14 +58,27 @@ class SupabaseService {
   SupabaseService()
       : client = SupabaseClient(ApiConstants.supabaseUrl, ApiConstants.supabaseKey);
 
-  Future<void> insertData(Map<String, dynamic> data) async {
-    final response = await client
-        .from('users') // Ensure this matches your Supabase table name
-        .insert(data)
-        .execute();
+  Future<List<Map<String, dynamic>>> fetchData() async {
+    try {
+      final response = await client
+          .from('users')
+          .select()
+          .execute();
+      
+      return (response.data as List).cast<Map<String, dynamic>>();
+    } catch (e) {
+      throw Exception('Failed to fetch data: $e');
+    }
+  }
 
-    if (response.error != null) {
-      throw Exception('Failed to insert data: ${response.error!.message}');
+  Future<void> insertData(Map<String, dynamic> data) async {
+    try {
+      await client
+          .from('users')
+          .insert(data)
+          .execute();
+    } catch (e) {
+      throw Exception('Failed to insert data: $e');
     }
   }
 }

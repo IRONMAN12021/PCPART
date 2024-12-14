@@ -14,4 +14,7 @@ class ApiConstants {
   // Supabase Constants
   static const String supabaseUrl = "https://your-supabase-url.supabase.co";
   static const String supabaseKey = "your-supabase-key";
+
+  static const String geminiBaseUrl = 'https://gemini-api.example.com';
+  static const String geminiApiKey = 'your-api-key-here';
 }

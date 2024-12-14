@@ -1,9 +1,9 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class TechSpot {
+class LTTLabs {
   static Future<List<Map<String, dynamic>>> scrape() async {
-    const String url = 'https://www.techspot.com/reviews/benchmarks';
+    const String url = 'https://www.lttlabs.com/benchmarks';
     try {
       final response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
@@ -14,11 +14,11 @@ class TechSpot {
           'details': item['details'],
         }).toList();
       } else {
-        throw Exception('Failed to fetch benchmarks from TechSpot');
+        throw Exception('Failed to fetch benchmarks from LTT Labs');
       }
     } catch (e) {
-      print('Error scraping TechSpot: $e');
+      print('Error scraping LTT Labs: $e');
       return [];
     }
   }
-}
+} 

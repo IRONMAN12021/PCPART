@@ -2,7 +2,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class PassMarkScraper {
+class PassMark {
   static Future<List<Map<String, dynamic>>> scrape() async {
     const String url = 'https://www.passmark.com/benchmarks';
     try {
