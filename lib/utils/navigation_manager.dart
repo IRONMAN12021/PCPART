@@ -12,12 +12,12 @@ import '../screens/home/search_screen.dart';
 import '../screens/build/build_pc.dart';
 import '../screens/build/auto_build/auto_build_screen.dart';
 import '../screens/build/manual_build/manual_build_screen.dart';
-import '../screens/build/manual_build/manual_build_summary_screen.dart';
 import '../screens/build/build_comparison_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/settings/about_screen.dart';
 import '../screens/settings/feedback_screen.dart';
 import '../screens/error/error_screen.dart';
+import '../screens/build/manual_build/manual_build_summary_screen.dart';
 
 class NavigationManager {
   static Route<dynamic> generateRoute(RouteSettings settings) {

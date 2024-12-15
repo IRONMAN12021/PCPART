@@ -1,10 +1,9 @@
 // ignore_for_file: avoid_print, deprecated_member_use
 
 import 'package:flutter/material.dart';
-//import 'package:myapp/services/supabase_service.dart';
-import 'package:supabase/supabase.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:myapp/services/supabase_service.dart';
 import 'package:myapp/utils/api_constants.dart';
-//import 'package:myapp/utils/logger.dart';
 
 void main() {
   final supabaseService = SupabaseService();

@@ -5,10 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:myapp/models/pc_part.dart'; // Import your model for PC Part data
 import 'package:shared_preferences/shared_preferences.dart'; // For caching purposes
-import 'package:myapp/services/gemini_service.dart';
 import 'package:myapp/services/power_tracker.dart';
-import 'package:myapp/services/compatability_checker.dart';
-import 'package:myapp/utils/api_constants.dart';
 
 class ApiService {
   static const String baseUrl =
@@ -17,22 +14,6 @@ class ApiService {
       "https://gemini-api.example.com"; // Example Gemini API
   static const String pcPartPickerUrl =
       "https://pcpartpicker.com/api"; // Example PCPartPicker API
-
-  final GeminiService _geminiService;
-  final PowerTracker _powerTracker;
-  final CompatibilityChecker _compatibilityChecker;
-
-  ApiService({
-    GeminiService? geminiService,
-    PowerTracker? powerTracker,
-    CompatibilityChecker? compatibilityChecker,
-  }) : 
-    _geminiService = geminiService ?? GeminiService(
-      baseUrl: ApiConstants.geminiBaseUrl,
-      apiKey: ApiConstants.geminiApiKey,
-    ),
-    _powerTracker = powerTracker ?? PowerTracker(),
-    _compatibilityChecker = compatibilityChecker ?? CompatibilityChecker();
 
   // Cache mechanism to avoid redundant requests
   Future<String?> _getCache(String key) async {
@@ -46,12 +27,12 @@ class ApiService {
   }
 
   // Get the list of available PC parts from the backend (to be integrated with your database)
-  Future<List<PCPart>> fetchPcParts() async {
+  Future<List> fetchPcParts() async {
     String? cachedData = await _getCache('pcPartsList');
     if (cachedData != null) {
       // If data is cached, return the cached data
       List<dynamic> data = json.decode(cachedData);
-      return data.map((item) => PCPart.fromJson(item)).toList();
+      return data.map((item) => PcPart.fromJson(item)).toList();
     }
 
     try {
@@ -59,7 +40,7 @@ class ApiService {
 
       if (response.statusCode == 200) {
         List<dynamic> data = json.decode(response.body);
-        List<PCPart>? parts = data.map((item) => PCPart.fromJson(item)).cast<PCPart>().toList();
+        List<PcPart>? parts = data.map((item) => PcPart.fromJson(item)).cast<PcPart>().toList();
         // Cache the response for future use
         _setCache('pcPartsList', json.encode(data));
         return parts;
@@ -72,8 +53,26 @@ class ApiService {
   }
 
   // Fetch parts from Gemini AI based on user's preferences
-  Future<List<PCPart>> getSuggestedParts(Map<String, dynamic> preferences) async {
-    return _geminiService.getSuggestedParts(preferences);
+  Future<List<PcPart>> getSuggestedPartsFromGemini(
+      Map<String, dynamic> preferences) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$geminiApiUrl/suggestParts'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(preferences),
+      );
+
+      if (response.statusCode == 200) {
+        List<dynamic> data = json.decode(response.body);
+        List<PcPart>? suggestedParts =
+            data.map((item) => PcPart.fromJson(item)).cast<PcPart>().toList();
+        return suggestedParts;
+      } else {
+        throw Exception('Failed to fetch parts from Gemini AI');
+      }
+    } catch (error) {
+      throw Exception('Error fetching from Gemini AI: $error');
+    }
   }
 
   // Fetch part details from PCPartPicker API
@@ -94,7 +93,7 @@ class ApiService {
   }
 
   // Save the selected parts list to the backend for building a PC
-  Future<void> saveBuild(List<PCPart> selectedParts) async {
+  Future<void> saveBuild(List<PcPart> selectedParts) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/saveBuild'),
@@ -145,13 +144,36 @@ class ApiService {
   }
 
   // Compatibility Check API for PC parts (e.g., CPU, Motherboard, RAM compatibility)
-  Future<Map<String, dynamic>> checkCompatibility(Map<String, String> selectedParts) async {
-    return _compatibilityChecker.checkCompatibility(selectedParts);
+  Future<Map<String, dynamic>> checkCompatibility(
+      Map<String, String> selectedParts) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/checkCompatibility'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'parts': selectedParts}),
+      );
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to check compatibility');
+      }
+    } catch (error) {
+      throw Exception('Error checking compatibility: $error');
+    }
   }
 
   // Power Usage Tracker (sum of TDP values from selected parts)
-  Future<double> calculatePowerUsage(List<PCPart> selectedParts) async {
-    return _powerTracker.calculateTotalPower(selectedParts);
+  Future<double> calculatePowerUsage(List<PcPart> selectedParts) async {
+    double totalTDP = 0;
+
+    for (var part in selectedParts) {
+      if (part.tdp != null) {
+        totalTDP += part.tdp!;
+      }
+    }
+
+    return totalTDP;
   }
 
   // Fetch all recommended build methods (e.g., automatic or manual builds) from backend
@@ -198,4 +220,41 @@ class ApiService {
     }
     return null;
   }
+}
+
+class PcPart {
+  final String id;
+  final String item;
+  final String name;
+  final String category;
+  final double price;
+  final String brand;
+  final String benchmarks;
+  final String fps;
+  final String type;
+  final double? tdp;
+
+  PcPart(this.id, this.item, this.name, this.category, this.price, this.brand,
+      this.benchmarks, this.fps, this.type, this.tdp); // TDP is nullable.
+
+  // Getter for TDP (Thermal Design Power)
+  double? get tdpValue => tdp;
+
+  // Convert PCPart object to JSON
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      '_item':item,
+      'name': name,
+      'category': category,
+      'price': price,
+      'brand': brand,
+      'benchmarks': benchmarks,
+      'fps': fps,
+      'type': type,
+      'tdp': tdp, // Include TDP if it's available
+    };
+  }
+
+  static fromJson(item) {}
 }

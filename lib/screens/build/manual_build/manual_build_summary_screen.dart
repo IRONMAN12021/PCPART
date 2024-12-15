@@ -18,13 +18,29 @@ class ManualBuildSummaryScreen extends StatelessWidget {
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
-          Text('Total Price: \$${buildConfig.totalPrice}'),
-          const SizedBox(height: 20),
-          const Text('Selected Parts:'),
-          ...buildConfig.parts.map(
-            (part) => ListTile(
+          Text('Build Configuration', style: Theme.of(context).textTheme.headlineSmall),
+          const SizedBox(height: 16),
+          ...buildConfig.parts.map((part) => Card(
+            child: ListTile(
               title: Text(part.name),
-              subtitle: Text('\$${part.price}'),
+              subtitle: Text(part.type),
+              trailing: Text('\$${part.price.toStringAsFixed(2)}'),
+            ),
+          )),
+          const SizedBox(height: 16),
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Total Price:'),
+                  Text(
+                    '\$${buildConfig.totalPrice.toStringAsFixed(2)}',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ],
+              ),
             ),
           ),
         ],

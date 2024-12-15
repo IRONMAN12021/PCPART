@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:myapp/screens/build/auto_build/auto_build_summary_screen.dart';
-import 'package:myapp/screens/build/manual_build/manual_build_summary_screen.dart';
 import 'package:myapp/screens/parts/parts_list_screen.dart';
 import 'package:myapp/screens/build/build_comparison_screen.dart';
 import 'package:myapp/models/build_config.dart';
+import 'package:myapp/screens/build/manual_build/manual_build_summary_screen.dart';
 import 'screens/build/auto_build/auto_build_screen.dart';
 
 class Routes {
