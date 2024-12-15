@@ -9,10 +9,10 @@ class PartsListScreen extends StatefulWidget {
   const PartsListScreen({super.key});
   
   @override
-  _PartsListScreenState createState() => _PartsListScreenState();
+  State<PartsListScreen> createState() => PartsListScreenState();
 }
 
-class _PartsListScreenState extends State<PartsListScreen> {
+class PartsListScreenState extends State<PartsListScreen> {
   late AmazonService amazonService;
   List<Map<String, dynamic>> parts = [];
   bool isLoading = true;
@@ -20,7 +20,7 @@ class _PartsListScreenState extends State<PartsListScreen> {
   @override
   void initState() {
     super.initState();
-    amazonService = AmazonService(scraperService: ScraperService());
+    amazonService = AmazonService(scraperService: ScraperService(baseUrl: 'https://www.amazon.com'));
     _fetchParts();
   }
 

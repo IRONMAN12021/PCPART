@@ -1,4 +1,3 @@
-import 'package:myapp/utils/api_constants.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SupabaseService {
@@ -11,10 +10,10 @@ class SupabaseService {
     final response = await client
         .from('users') // Ensure this matches your Supabase table name
         .insert(data)
-        .execute();
+        .select();
 
-    if (response.error != null) {
-      throw Exception('Failed to insert data: ${response.error!.message}');
+    if (response.status != 201) {
+      throw Exception('Failed to insert data');
     }
   }
 }

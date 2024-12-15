@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+//import 'package:supabase_flutter/supabase_flutter.dart';
+//import '../../../services/supabase_service.dart';
 import 'questions/budget.dart';
 import 'questions/use_case_screen.dart';
 import 'questions/space_constraint_screen.dart';
@@ -53,10 +55,24 @@ class _QuestionFlowManagerState extends State<QuestionFlowManager> {
     });
   }
 
-  void _finishQuestionnaire() {
-    // TODO: Process all answers and generate build configuration
-    Navigator.pushReplacementNamed(
-      context,
+  void _finishQuestionnaire() async {
+    final navigator = Navigator.of(context);
+    
+    // Process answers to generate build configuration
+    final buildConfig = {
+      'budget': answers['budget'],
+      'useCase': answers['useCase'],
+      'spaceConstraints': answers['spaceConstraints'],
+      'noisePreferences': answers['noisePreferences'],
+      'environment': answers['environment'],
+      'usagePattern': answers['usagePattern'],
+      'futureProofing': answers['futureProofing'],
+      'specialRequirements': answers['specialRequirements'],
+      'peripherals': answers['peripherals'],
+    };
+
+    if (!mounted) return;
+    navigator.pushReplacementNamed(
       '/auto_build_summary',
       arguments: answers,
     );

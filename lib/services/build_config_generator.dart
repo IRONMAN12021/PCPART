@@ -1,5 +1,6 @@
 import 'package:myapp/models/build_config.dart';
 import 'package:myapp/models/pc_part.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class BuildConfigGenerator {
   static Future<BuildConfig> generateFromAnswers(Map<String, dynamic> answers) async {
@@ -13,7 +14,7 @@ class BuildConfigGenerator {
     // Generate component requirements
     final requirements = _generateRequirements(answers);
 
-    // TODO: Implement actual part selection logic
+    // Select optimal parts based on budget and requirements
     final selectedParts = await _selectOptimalParts(
       budgetAllocation,
       requirements,
@@ -23,7 +24,7 @@ class BuildConfigGenerator {
 
     return BuildConfig(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
-      userId: 'temp_user', // TODO: Implement user authentication
+      userId: Supabase.instance.client.auth.currentUser?.id ?? 'anonymous',
       parts: selectedParts,
       totalPrice: selectedParts.fold(0.0, (sum, part) => sum + part.price),
     );
@@ -135,9 +136,36 @@ class BuildConfigGenerator {
     Map<String, dynamic> environment,
     Map<String, dynamic> noisePreferences,
   ) async {
-    // TODO: Implement actual part selection logic
-    // This should query a database or API to find compatible parts
-    // that meet the requirements within the budget allocation
-    return [];
+    final supabase = Supabase.instance.client;
+    final parts = <PCPart>[];
+
+    for (var type in budgetAllocation.keys) {
+      final maxPrice = budgetAllocation[type]!;
+      final typeReqs = requirements[type] ?? {};
+
+      final response = await supabase
+          .from('parts')
+          .select()
+          .eq('type', type)
+          .lte('price', maxPrice)
+          .gte('specifications->cores', typeReqs['minCores'] ?? 0)
+          .gte('specifications->vram', typeReqs['minVRAM'] ?? 0)
+          .gte('specifications->capacity', typeReqs['minCapacity'] ?? 0)
+          .order('price', ascending: false)
+          .limit(1);
+
+      if (response.isNotEmpty) {
+        final part = response.first;
+        parts.add(PCPart(
+          id: part['id'],
+          name: part['name'],
+          type: part['type'],
+          price: part['price'],
+          specifications: part['specifications'],
+        ));
+      }
+    }
+
+    return parts;
   }
 } 
